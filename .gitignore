@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+.DS_Store
+
+# Gerados por `python gerar_base.py`, determinísticos a partir da semente.
+# Ficam fora do versionamento de propósito: o que precisa ser auditável é o
+# gerador, não a saída dele. A integração contínua prova o determinismo gerando
+# duas vezes e comparando.
+dados/base_sintetica.csv
+dados/gabarito_sintetico.json
