@@ -1,0 +1,39 @@
+name: testes
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  testes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt
+
+      - name: lint
+        run: ruff check . --select F,E9,E3 --preview
+
+      - name: o gerador é determinístico
+        run: |
+          python gerar_base.py
+          sha256sum dados/*.csv dados/*.json > /tmp/primeira
+          rm dados/base_sintetica.csv dados/gabarito_sintetico.json
+          python gerar_base.py
+          sha256sum dados/*.csv dados/*.json > /tmp/segunda
+          diff /tmp/primeira /tmp/segunda
+
+      - name: os casos difíceis são reprodutíveis
+        run: |
+          python montar_casos.py
+          git diff --exit-code dados/casos.json
+
+      - name: testes
+        run: python -m pytest testes/ -q
+
+      - name: as tabelas do README reproduzem
+        run: python avaliar.py
