@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Higiene de cadastro — duplicatas</title>
+<meta name="description" content="Cole a sua base de clientes e veja as duplicatas, com o motivo ao lado. O arquivo não sai do seu navegador.">
+<style>
+  :root {
+    --tinta: #14181d; --tinta-fraca: #5b6672; --papel: #ffffff; --fundo: #f4f6f8;
+    --linha: #dfe4ea; --grave: #b42318; --grave-fundo: #fef3f2;
+    --ok: #067647; --ok-fundo: #ecfdf3; --atencao: #b54708; --atencao-fundo: #fffaeb;
+    --acento: #1f3d7a; --guarda: #5925dc; --guarda-fundo: #f4f3ff;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--fundo); color: var(--tinta);
+    font: 16px/1.55 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  .faixa { background: var(--tinta); color: #fff; padding: 2rem 1.25rem 2.25rem; }
+  .caixa { max-width: 980px; margin: 0 auto; }
+  h1 { margin: 0 0 .4rem; font-size: 1.6rem; letter-spacing: -.01em; }
+  .faixa p { margin: 0; color: #b8c2cc; max-width: 62ch; }
+  .selo { display: inline-block; margin-top: 1rem; padding: .35rem .7rem;
+    background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18);
+    border-radius: 999px; font-size: .82rem; color: #dbe3ea; }
+  main { max-width: 980px; margin: -1.25rem auto 3rem; padding: 0 1.25rem; }
+  .cartao { background: var(--papel); border: 1px solid var(--linha);
+    border-radius: 10px; padding: 1.25rem; margin-bottom: 1rem; }
+  h2 { font-size: 1.05rem; margin: 0 0 .6rem; }
+  textarea { width: 100%; min-height: 170px;
+    font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+    padding: .7rem; border: 1px solid var(--linha); border-radius: 8px; resize: vertical;
+    background: #fbfcfd; color: var(--tinta); }
+  .botoes { display: flex; gap: .6rem; flex-wrap: wrap; margin-top: .8rem; align-items: center; }
+  button { font: inherit; font-weight: 600; padding: .6rem 1.1rem; border-radius: 8px;
+    border: 1px solid var(--linha); background: var(--papel); color: var(--tinta); cursor: pointer; }
+  button:hover:not(:disabled) { border-color: #b9c2cc; }
+  button.principal { background: var(--acento); border-color: var(--acento); color: #fff; }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  input[type=file] { font: inherit; font-size: .9rem; }
+  .painel { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .75rem; }
+  .numero { border: 1px solid var(--linha); border-radius: 8px; padding: .8rem; background: #fbfcfd; }
+  .numero .rotulo { font-size: .78rem; color: var(--tinta-fraca); text-transform: uppercase; letter-spacing: .04em; }
+  .numero .valor { font-size: 1.5rem; font-weight: 700; margin-top: .15rem; }
+  .veredito { padding: .9rem 1rem; border-radius: 8px; margin-bottom: 1rem; font-weight: 600; }
+  .veredito.suja { background: var(--grave-fundo); color: var(--grave); border: 1px solid #fecdca; }
+  .veredito.limpa { background: var(--ok-fundo); color: var(--ok); border: 1px solid #abefc6; }
+  table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+  th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid var(--linha); vertical-align: top; }
+  th { font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; color: var(--tinta-fraca); }
+  .rolagem { max-height: 460px; overflow: auto; border: 1px solid var(--linha); border-radius: 8px; }
+  .marca { display: inline-block; padding: .1rem .45rem; border-radius: 999px;
+    font-size: .74rem; font-weight: 700; white-space: nowrap; }
+  .marca.alta { background: var(--grave-fundo); color: var(--grave); }
+  .marca.media { background: var(--atencao-fundo); color: var(--atencao); }
+  .marca.unidade { background: var(--guarda-fundo); color: var(--guarda); }
+  .motivos { color: var(--tinta-fraca); font-size: .86rem; }
+  .aviso { background: var(--atencao-fundo); border: 1px solid #fedf89; color: var(--atencao);
+    padding: .7rem .9rem; border-radius: 8px; font-size: .9rem; margin-bottom: 1rem; }
+  .guarda { background: var(--guarda-fundo); border: 1px solid #d9d6fe; color: var(--guarda);
+    padding: .7rem .9rem; border-radius: 8px; font-size: .9rem; margin-bottom: 1rem; }
+  .erro { background: var(--grave-fundo); border: 1px solid #fecdca; color: var(--grave);
+    padding: .7rem .9rem; border-radius: 8px; font-size: .92rem; }
+  code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .88em; }
+  details { margin-top: .8rem; }
+  summary { cursor: pointer; font-weight: 600; font-size: .93rem; }
+  .rodape { color: var(--tinta-fraca); font-size: .88rem; text-align: center; padding: 0 1.25rem 2.5rem; }
+  .rodape a { color: var(--acento); }
+  .rodape p { margin: 0 0 .6rem; }
+  .assinatura { max-width: 640px; margin: 2rem auto 0; padding-top: 1.6rem;
+    border-top: 1px solid var(--linha); }
+  .assinatura .nome { color: var(--tinta); font-weight: 600; margin-bottom: .5rem; }
+  .assinatura .ciclo { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+    margin: .9rem 0 .8rem; }
+  .assinatura .ligacoes a { margin: 0 .35rem; }
+  .oculto { display: none; }
+  @media (prefers-color-scheme: dark) {
+    :root { --tinta: #e8edf2; --tinta-fraca: #9aa7b4; --papel: #171b21; --fundo: #0e1116;
+      --linha: #2a323c;
+      --grave: #ff8b82; --grave-fundo: #2a1614;
+      --ok: #6ee7a8; --ok-fundo: #10261c;
+      --atencao: #fdb022; --atencao-fundo: #2a2113;
+      --guarda: #b8a6ff; --guarda-fundo: #1c1730;
+      --acento: #7aa2f7; }
+    textarea, .numero { background: #10141a; }
+    button.principal { color: #0e1116; }
+    .veredito.suja { border-color: #7a2b26; }
+    .veredito.limpa { border-color: #235c40; }
+    .aviso { border-color: #6b4d16; }
+    .guarda { border-color: #3a2f66; }
+    .erro { border-color: #7a2b26; }
+  }
+</style>
+</head>
+<body>
+
+<div class="faixa">
+  <div class="caixa">
+    <h1>Higiene de cadastro</h1>
+    <p>Cole a sua base de clientes ou fornecedores e receba os registros repetidos,
+       com o motivo ao lado. Matriz e filial são separadas em vez de fundidas.</p>
+    <span class="selo" id="selo">Carregando o motor de análise…</span>
+  </div>
+</div>
+
+<main>
+  <div class="cartao">
+    <h2>1. A sua base</h2>
+    <textarea id="entrada" spellcheck="false" placeholder="nome,cnpj,email,telefone&#10;SILVA COMERCIO DE TINTAS LTDA,33.000.167/0001-01,contato@silva.com.br,(11) 3456-7890&#10;Silva Comércio de Tintas ME,33000167000101,contato@silva.com.br,1134567890"></textarea>
+    <div class="botoes">
+      <button id="analisar" class="principal" disabled>Analisar</button>
+      <button id="exemplo" disabled>Carregar exemplo</button>
+      <input type="file" id="arquivo" accept=".csv,text/csv,text/plain">
+    </div>
+    <details>
+      <summary>Que colunas o arquivo precisa ter</summary>
+      <p style="font-size:.93rem">
+        Só <code>nome</code> é obrigatória. Cada coluna a mais melhora a análise, porque
+        vira evidência independente do nome.
+      </p>
+      <ul style="font-size:.93rem">
+        <li><code>nome</code> — aceita também <code>razao_social</code>, <code>cliente</code>,
+            <code>fornecedor</code> ou <code>empresa</code>.</li>
+        <li><code>documento</code> — aceita <code>cnpj</code>, <code>cpf</code> ou
+            <code>cpf_cnpj</code>, com ou sem pontuação.</li>
+        <li><code>email</code>, <code>telefone</code>, <code>cep</code>, <code>numero</code>.</li>
+        <li><code>id</code> — se não existir, uso o número da linha.</li>
+        <li>Colunas a mais são ignoradas. Não precisa reformatar a planilha.</li>
+        <li>Separador vírgula ou ponto e vírgula, os dois funcionam.</li>
+      </ul>
+    </details>
+  </div>
+
+  <div id="saida" class="oculto"></div>
+</main>
+
+<footer class="rodape">
+  <p>
+    Análise feita pelo mesmo código que roda nos testes do projeto —
+    <a href="https://github.com/thiagolopes-ai/base-limpa">base-limpa</a>, licença MIT.<br>
+    Ferramenta de diagnóstico. A decisão de fundir registro é de quem responde pelo cadastro.
+  </p>
+
+  <div class="assinatura">
+    <p class="nome">Tiago Lopes — advogado e legal engineer</p>
+    <p>
+      Entre quem entende o risco jurídico e quem escreve o código quase sempre existe um
+      tradutor. Comigo não existe: eu sou os dois. Esta página é um exemplo — a regra que
+      separa matriz de filial e a linha de código que a aplica foram escritas pela mesma pessoa.
+    </p>
+    <p class="ciclo">Estudo · Desenho · Construção · Implantação · Acompanhamento</p>
+    <p class="ligacoes">
+      <a href="https://www.linkedin.com/in/tiagolopes-gerentegeral/">LinkedIn</a> ·
+      <a href="https://github.com/thiagolopes-ai">Outros projetos</a>
+    </p>
+  </div>
+</footer>
+
+<script type="module">
+const selo = document.getElementById("selo");
+const entrada = document.getElementById("entrada");
+const saida = document.getElementById("saida");
+const btnAnalisar = document.getElementById("analisar");
+const btnExemplo = document.getElementById("exemplo");
+const arquivo = document.getElementById("arquivo");
+
+// Os módulos que rodam no navegador são exatamente os do repositório. Nenhum
+// deles tem dependência externa — é essa decisão que permite analisar a base
+// aqui dentro, sem reescrever nada em JavaScript e sem que as duas versões
+// divirjam com o tempo.
+const MODULOS = ["documento.py", "texto.py", "dominio.py", "pares.py",
+                 "higiene.py", "planilha.py"];
+
+let pyodide = null;
+
+async function iniciar() {
+  const { loadPyodide } = await import("https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.mjs");
+  pyodide = await loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/" });
+
+  pyodide.FS.mkdir("/base");
+  for (const nome of MODULOS) {
+    const resposta = await fetch("base/" + nome);
+    if (!resposta.ok) throw new Error("não consegui carregar base/" + nome);
+    pyodide.FS.writeFile("/base/" + nome, await resposta.text());
+  }
+  pyodide.FS.writeFile("/base/__init__.py", "");
+  await pyodide.runPythonAsync(`
+import sys
+sys.path.insert(0, "/")
+from base.planilha import ler, PlanilhaInvalida
+from base.higiene import analisar_base
+from base.pares import faixa
+`);
+
+  selo.textContent = "Pronto. Nada do que você colar sai deste navegador.";
+  btnAnalisar.disabled = false;
+  btnExemplo.disabled = false;
+}
+
+function escapar(t) {
+  const caixa = document.createElement("div");
+  caixa.textContent = String(t);
+  return caixa.innerHTML;
+}
+
+function pct(v) {
+  return v.toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + "%";
+}
+
+async function rodar() {
+  const texto = entrada.value.trim();
+  if (!texto) { entrada.focus(); return; }
+
+  btnAnalisar.disabled = true;
+  btnAnalisar.textContent = "Analisando…";
+  saida.classList.remove("oculto");
+  saida.innerHTML = `<div class="cartao">Lendo a planilha…</div>`;
+
+  pyodide.globals.set("csv_do_usuario", texto);
+  let bruto;
+  try {
+    bruto = await pyodide.runPythonAsync(`
+import json
+try:
+    registros = ler(csv_do_usuario)
+    r = analisar_base(registros)
+    def lado(x):
+        return {"id": x.id, "nome": x.nome, "doc": x.documento, "linha": x.linha}
+    resposta = {
+        "ok": True,
+        "resumo": r.resumo(),
+        "pares": [
+            {"a": lado(p.a), "b": lado(p.b), "confianca": round(p.confianca, 2),
+             "faixa": faixa(p.confianca), "motivos": p.motivos}
+            for p in r.pares
+        ],
+        "unidades": [
+            {"a": lado(p.a), "b": lado(p.b), "motivos": p.motivos}
+            for p in r.estabelecimentos
+        ],
+        "grupos": [
+            {"ids": g.ids, "motivos": g.motivos}
+            for g in r.grupos if len(g.ids) > 2
+        ],
+    }
+except PlanilhaInvalida as erro:
+    resposta = {"ok": False, "erro": str(erro)}
+json.dumps(resposta, ensure_ascii=False)
+`);
+  } catch (e) {
+    bruto = JSON.stringify({ ok: false, erro: "não consegui ler o arquivo: " + e.message });
+  }
+
+  desenhar(JSON.parse(bruto));
+  btnAnalisar.disabled = false;
+  btnAnalisar.textContent = "Analisar";
+}
+
+function desenhar(r) {
+  if (!r.ok) {
+    saida.innerHTML = `<div class="cartao"><div class="erro"><strong>Não deu para ler.</strong><br>${escapar(r.erro)}</div></div>`;
+    return;
+  }
+
+  const s = r.resumo;
+  const sujos = s.registros_duplicados;
+  const veredito = sujos === 0
+    ? `<div class="veredito limpa">Nenhuma duplicata encontrada nas regras conferidas.</div>`
+    : `<div class="veredito suja">${sujos} ${sujos > 1 ? "registros repetidos" : "registro repetido"} — ${pct(s.percentual_sujo)} da base.</div>`;
+
+  const guarda = s.fusoes_evitadas > 0
+    ? `<div class="guarda"><strong>${s.fusoes_evitadas} ${s.fusoes_evitadas > 1 ? "fusões evitadas" : "fusão evitada"}.</strong>
+       São pares que pareciam duplicata pelo nome, mas pertencem a estabelecimentos
+       diferentes do mesmo grupo. Fundir apagaria uma unidade do seu faturamento.</div>`
+    : "";
+
+  const linhas = r.pares.map(p => `
+    <tr>
+      <td><span class="marca ${p.faixa === "alta" ? "alta" : "media"}">${p.faixa}</span></td>
+      <td><strong>${escapar(p.a.nome)}</strong><br><span class="mono motivos">${escapar(p.a.doc || "sem documento")} · linha ${p.a.linha}</span></td>
+      <td><strong>${escapar(p.b.nome)}</strong><br><span class="mono motivos">${escapar(p.b.doc || "sem documento")} · linha ${p.b.linha}</span></td>
+      <td class="motivos">${escapar(p.motivos.join("; "))}</td>
+    </tr>`).join("");
+
+  const unidades = r.unidades.map(p => `
+    <tr>
+      <td><strong>${escapar(p.a.nome)}</strong><br><span class="mono motivos">${escapar(p.a.doc || "sem documento")}</span></td>
+      <td><strong>${escapar(p.b.nome)}</strong><br><span class="mono motivos">${escapar(p.b.doc || "sem documento")}</span></td>
+      <td class="motivos">${escapar(p.motivos.join("; "))}</td>
+    </tr>`).join("");
+
+  saida.innerHTML = `
+    <div class="cartao">
+      <h2>2. O resultado</h2>
+      ${veredito}
+      ${guarda}
+      <div class="painel">
+        <div class="numero"><div class="rotulo">Registros</div><div class="valor">${s.registros}</div></div>
+        <div class="numero"><div class="rotulo">A eliminar</div><div class="valor">${s.registros_duplicados}</div></div>
+        <div class="numero"><div class="rotulo">Base suja</div><div class="valor">${pct(s.percentual_sujo)}</div></div>
+        <div class="numero"><div class="rotulo">Unidades preservadas</div><div class="valor">${s.estabelecimentos}</div></div>
+      </div>
+      <p style="font-size:.88rem;color:var(--tinta-fraca);margin-top:.9rem">
+        ${s.pares_comparados} pares comparados · ${s.grupos} grupo(s) de duplicata ·
+        ${s.pares_alta} par(es) de alta confiança e ${s.pares_media} para conferir à mão.
+        Nenhuma linha foi alterada: esta é uma lista de conferência, não uma fusão.
+      </p>
+    </div>
+
+    ${r.pares.length ? `
+    <div class="cartao">
+      <h2>Os pares, do mais confiante para o menos</h2>
+      <div class="rolagem">
+        <table><thead><tr><th>Confiança</th><th>Registro</th><th>Registro</th><th>Por quê</th></tr></thead>
+        <tbody>${linhas}</tbody></table>
+      </div>
+    </div>` : ""}
+
+    ${r.unidades.length ? `
+    <div class="cartao">
+      <h2>O que eu não fundi de propósito</h2>
+      <p style="font-size:.9rem;color:var(--tinta-fraca);margin:0 0 .7rem">
+        Mesmo grupo econômico, estabelecimentos distintos. Cada um tem inscrição,
+        faturamento e contrato próprios.
+      </p>
+      <div class="rolagem">
+        <table><thead><tr><th>Registro</th><th>Registro</th><th>Por quê</th></tr></thead>
+        <tbody>${unidades}</tbody></table>
+      </div>
+    </div>` : ""}
+  `;
+  saida.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+async function carregarExemplo() {
+  btnExemplo.disabled = true;
+  btnExemplo.textContent = "Gerando…";
+  entrada.value = await pyodide.runPythonAsync(`
+import csv, io, random
+from base.documento import _dv, PESOS_CNPJ_1, PESOS_CNPJ_2
+
+rnd = random.Random(7)
+def cnpj(raiz, ordem="0001"):
+    doze = raiz + ordem
+    d1 = _dv(doze, PESOS_CNPJ_1)
+    return doze + d1 + _dv(doze + d1, PESOS_CNPJ_2)
+
+A, B = cnpj("11222333"), cnpj("11222333", "0002")
+C, D = cnpj("44555666"), cnpj("77888999")
+linhas = [
+    ["id","nome","cnpj","email","telefone"],
+    ["1","SILVA COMERCIO DE TINTAS LTDA",A,"contato@silva.com.br","(11) 3456-7890"],
+    ["2","Silva Comércio de Tintas ME","","contato@silva.com.br","1134567890"],
+    ["3","SILVA COMERCIO DE TINTAS LTDA",B,"filial@silva.com.br","(11) 2222-3333"],
+    ["4","OLIVEIRA MAT DE CONSTRUCAO",C,"vendas@oliveira.com.br","2199887766"],
+    ["5","Oliveira Materiais de Construção","","vendas@oliveira.com.br","21998877660"],
+    ["6","TRANSP RAPIDO DO NORTE LTDA","","","8133445566"],
+    ["7","TRANSPORTES RAPIDO DO NORTE","","","81334455660"],
+    ["8","OTICA VISAO","","otica@visao.com.br","1144445555"],
+    ["9","OTICA VISAO II","","otica2@visao.com.br","1144446666"],
+    ["10","PADARIA PAO QUENTE LTDA",D,"","1155556666"],
+    ["11","MARTINS E CIA LTDA",cnpj("55666777"),"",""],
+    ["12","GRUPO MR PARTICIPACOES S/A",cnpj("55666777"),"",""],
+]
+saida = io.StringIO()
+csv.writer(saida).writerows(linhas)
+saida.getvalue()
+`);
+  btnExemplo.textContent = "Carregar exemplo";
+  btnExemplo.disabled = false;
+  rodar();
+}
+
+arquivo.addEventListener("change", async () => {
+  const f = arquivo.files[0];
+  if (f) { entrada.value = await f.text(); rodar(); }
+});
+btnAnalisar.addEventListener("click", rodar);
+btnExemplo.addEventListener("click", carregarExemplo);
+
+iniciar().catch(e => {
+  selo.textContent = "Não consegui carregar o motor de análise.";
+  saida.classList.remove("oculto");
+  saida.innerHTML = `<div class="cartao"><div class="erro">${escapar(e.message)}</div></div>`;
+});
+</script>
+</body>
+</html>
