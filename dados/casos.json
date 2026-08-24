@@ -1,0 +1,299 @@
+[
+ {
+  "id": "caso-01",
+  "rotulo": "duplicata",
+  "descricao": "Forma societária mudou de LTDA para ME. Mesmo CNPJ.",
+  "a": {
+   "nome": "SILVA COMERCIO DE TINTAS LTDA",
+   "documento": "11222333000181"
+  },
+  "b": {
+   "nome": "Silva Comércio de Tintas ME",
+   "documento": "11222333000181"
+  }
+ },
+ {
+  "id": "caso-02",
+  "rotulo": "duplicata",
+  "descricao": "Segundo cadastro sem documento, feito por quem não achou o cliente.",
+  "a": {
+   "nome": "OLIVEIRA MATERIAIS DE CONSTRUCAO LTDA",
+   "documento": "44555666000181",
+   "telefone": "(11) 3456-7890"
+  },
+  "b": {
+   "nome": "Oliveira Materiais de Construção",
+   "documento": "",
+   "telefone": "1134567890"
+  }
+ },
+ {
+  "id": "caso-03",
+  "rotulo": "duplicata",
+  "descricao": "Nome truncado no campo de 30 caracteres do sistema antigo.",
+  "a": {
+   "nome": "EMPREENDIMENTOS IMOBILIARIOS SANTOS E FILHOS LTDA",
+   "documento": "77888999000181"
+  },
+  "b": {
+   "nome": "EMPREENDIMENTOS IMOBILIARIOS S",
+   "documento": "",
+   "email": "contato@santos.com.br"
+  },
+  "nota": "Sem o e-mail em comum, este par não seria achado."
+ },
+ {
+  "id": "caso-04",
+  "rotulo": "duplicata",
+  "descricao": "Abreviação: TRANSP contra TRANSPORTES.",
+  "a": {
+   "nome": "TRANSP RAPIDO DO NORTE LTDA",
+   "documento": "",
+   "telefone": "8199887766"
+  },
+  "b": {
+   "nome": "TRANSPORTES RAPIDO DO NORTE",
+   "documento": "",
+   "telefone": "(81) 99887-766"
+  }
+ },
+ {
+  "id": "caso-05",
+  "rotulo": "duplicata",
+  "descricao": "Celular gravado antes e depois do nono dígito.",
+  "a": {
+   "nome": "PEREIRA SERVICOS",
+   "documento": "",
+   "telefone": "1187654321"
+  },
+  "b": {
+   "nome": "PEREIRA SERVIÇOS",
+   "documento": "",
+   "telefone": "11987654321"
+  }
+ },
+ {
+  "id": "caso-06",
+  "rotulo": "duplicata",
+  "descricao": "Palavras do nome em ordem trocada.",
+  "a": {
+   "nome": "COMERCIO DE PECAS ALMEIDA LTDA",
+   "documento": "",
+   "email": "vendas@almeida.com.br"
+  },
+  "b": {
+   "nome": "ALMEIDA COMERCIO DE PECAS",
+   "documento": "",
+   "email": "VENDAS@ALMEIDA.COM.BR"
+  }
+ },
+ {
+  "id": "caso-07",
+  "rotulo": "duplicata",
+  "descricao": "Erro de digitação no CNPJ deixou o documento inválido.",
+  "a": {
+   "nome": "FERREIRA DISTRIBUIDORA LTDA",
+   "documento": "22333444000181"
+  },
+  "b": {
+   "nome": "FERREIRA DISTRIBUIDORA LTDA",
+   "documento": "22333944000181"
+  },
+  "nota": "O documento do segundo não passa no dígito verificador."
+ },
+ {
+  "id": "caso-08",
+  "rotulo": "duplicata",
+  "descricao": "Empresa trocou de razão social. Mesmo CNPJ, nome irreconhecível.",
+  "a": {
+   "nome": "MARTINS E CIA LTDA",
+   "documento": "55666777000181"
+  },
+  "b": {
+   "nome": "GRUPO MR PARTICIPACOES S/A",
+   "documento": "55666777000181"
+  },
+  "nota": "Só o documento salva este par. Nenhuma comparação de nome pegaria."
+ },
+ {
+  "id": "caso-09",
+  "rotulo": "duplicata",
+  "descricao": "Acentuação inconsistente entre os dois cadastros.",
+  "a": {
+   "nome": "INDUSTRIA QUIMICA SAO JOAO",
+   "documento": "",
+   "cep": "04567000",
+   "numero": "120"
+  },
+  "b": {
+   "nome": "Indústria Química São João",
+   "documento": "",
+   "cep": "04567-000",
+   "numero": "120"
+  }
+ },
+ {
+  "id": "caso-10",
+  "rotulo": "duplicata",
+  "descricao": "Pessoa física cadastrada duas vezes, com e sem CPF.",
+  "a": {
+   "nome": "MARIA APARECIDA DE SOUZA",
+   "documento": "12345678909",
+   "telefone": "3199887766"
+  },
+  "b": {
+   "nome": "Maria Aparecida de Souza",
+   "documento": "",
+   "telefone": "31998877669"
+  },
+  "nota": "O telefone do segundo tem um dígito a mais, erro comum de digitação."
+ },
+ {
+  "id": "caso-11",
+  "rotulo": "estabelecimentos",
+  "descricao": "Matriz e filial. Mesma raiz, ordem diferente.",
+  "a": {
+   "nome": "SILVA COMERCIO DE TINTAS LTDA",
+   "documento": "11222333000181"
+  },
+  "b": {
+   "nome": "SILVA COMERCIO DE TINTAS LTDA",
+   "documento": "11222333000262"
+  },
+  "nota": "O par mais caro de errar: fundir some com uma unidade do faturamento."
+ },
+ {
+  "id": "caso-12",
+  "rotulo": "distintos",
+  "descricao": "Homônimos em cidades diferentes, CNPJs diferentes.",
+  "a": {
+   "nome": "PADARIA PAO QUENTE LTDA",
+   "documento": "12345678000195",
+   "cep": "01310100"
+  },
+  "b": {
+   "nome": "PADARIA PAO QUENTE LTDA",
+   "documento": "87654321000198",
+   "cep": "80010000"
+  }
+ },
+ {
+  "id": "caso-13",
+  "rotulo": "distintos",
+  "descricao": "Duas lojas da mesma marca, distinguidas por numeral.",
+  "a": {
+   "nome": "OTICA VISAO",
+   "documento": "",
+   "telefone": "1133334444"
+  },
+  "b": {
+   "nome": "OTICA VISAO II",
+   "documento": "",
+   "telefone": "1133335555"
+  }
+ },
+ {
+  "id": "caso-14",
+  "rotulo": "distintos",
+  "descricao": "Escritório compartilhado: mesmo CEP e número, empresas diferentes.",
+  "a": {
+   "nome": "ALFA CONSULTORIA LTDA",
+   "documento": "13579246000101",
+   "cep": "04538133",
+   "numero": "1000"
+  },
+  "b": {
+   "nome": "BETA ASSESSORIA LTDA",
+   "documento": "24681357000140",
+   "cep": "04538133",
+   "numero": "1000"
+  },
+  "nota": "Endereço igual é evidência fraca em centro empresarial."
+ },
+ {
+  "id": "caso-15",
+  "rotulo": "distintos",
+  "descricao": "E-mail genérico compartilhado pelo mesmo contador.",
+  "a": {
+   "nome": "GOMES TRANSPORTES",
+   "documento": "19283746000188",
+   "email": "contabilidade@escritoriox.com.br"
+  },
+  "b": {
+   "nome": "ROCHA ALIMENTOS",
+   "documento": "46372819000180",
+   "email": "contabilidade@escritoriox.com.br"
+  }
+ },
+ {
+  "id": "caso-16",
+  "rotulo": "distintos",
+  "descricao": "Sócio pessoa física e a empresa dele. Mesmo nome, documentos de tipos diferentes.",
+  "a": {
+   "nome": "CARLOS EDUARDO BARBOSA",
+   "documento": "98765432100"
+  },
+  "b": {
+   "nome": "CARLOS EDUARDO BARBOSA",
+   "documento": "31415926000171"
+  }
+ },
+ {
+  "id": "caso-17",
+  "rotulo": "distintos",
+  "descricao": "Franquias diferentes com a mesma marca no nome.",
+  "a": {
+   "nome": "FRANQUIA BOM SABOR MOEMA LTDA",
+   "documento": "11223344000186"
+  },
+  "b": {
+   "nome": "FRANQUIA BOM SABOR TATUAPE LTDA",
+   "documento": "44332211000105"
+  }
+ },
+ {
+  "id": "caso-18",
+  "rotulo": "distintos",
+  "descricao": "Pai e filho, nomes quase idênticos.",
+  "a": {
+   "nome": "JOSE ANTONIO RIBEIRO",
+   "documento": "11144477735",
+   "cep": "30130010",
+   "numero": "45"
+  },
+  "b": {
+   "nome": "JOSE ANTONIO RIBEIRO JUNIOR",
+   "documento": "",
+   "cep": "30130010",
+   "numero": "45"
+  },
+  "nota": "Mesmo endereço, porque moram juntos. É o caso que mais engana."
+ },
+ {
+  "id": "caso-19",
+  "rotulo": "distintos",
+  "descricao": "Duas filiais entre si, sem a matriz no par.",
+  "a": {
+   "nome": "TEIXEIRA LOGISTICA LTDA",
+   "documento": "99887766000288"
+  },
+  "b": {
+   "nome": "TEIXEIRA LOGISTICA LTDA",
+   "documento": "99887766000369"
+  },
+  "nota": "Rotulado como distintos e não como estabelecimentos: são duas unidades, e o veredito correto é o mesmo — não fundir."
+ },
+ {
+  "id": "caso-20",
+  "rotulo": "distintos",
+  "descricao": "Nomes parecidos, ramos e documentos diferentes.",
+  "a": {
+   "nome": "COSTA COMERCIO DE MOVEIS",
+   "documento": "15975345000138"
+  },
+  "b": {
+   "nome": "COSTA COMERCIO DE MOTORES",
+   "documento": "34579515000100"
+  }
+ }
+]
